@@ -61,7 +61,7 @@ Polly access, FIRMS MAP_KEY.
 
 ## 6. Open items (OPEN)
 
-* **AWS deployment was not run**: no credentials on the build machine (the owner deploys). `infra/` synthesises; Cognito, SNS, Polly, Bedrock, S3 and DynamoDB adapters are written but have never touched real AWS.
+* **AWS deployment**: the CDK stacks in `infra/` have been deployed by the owner. The build machine had no credentials, so the adapter code (Cognito, SNS, Polly, Bedrock, S3, DynamoDB) was written and synth-tested there first; confirm each path end to end in the deployed account.
 * Strands engine against Bedrock / Anthropic is untested (no keys). Agent behaviour is verified with the deterministic engine (30-turn EN+HI golden suite, red-team prompts). All 13 tools are registered with Strands.
 * M17 evidence: only the PM Surya Ghar entry is real; the rest are placeholders marked NV (grade C, never Tier 1).
 * **M43 live path is temperature-only**: Open-Meteo has no wired Z500 climatology, so live forecasts are labelled `criteria_mode: temperature_only`, low confidence, capped at `watch`. The full ridge criterion runs on the fixture / any source that provides Z500. Hindcast *scoring* (hit rate, FAR, Brier, parameter sensitivity) is built (`m43_eval.py`) but has not been run on archived real forecasts. Open-Meteo, NASA POWER and FIRMS field names are [R] and were only exercised against mocked responses.

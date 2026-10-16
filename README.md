@@ -4,7 +4,7 @@
 
 CoolRoof is a full-stack urban-heat intelligence platform that ranks city wards and rooftops for cool-roof action using Landsat surface temperature data, and gives households a locality-aware rooftop-solar check (PM Surya Ghar subsidy, payback range, Hindi/English assistant, PDF summary).
 
-**Built for AWS Hackathon 2026 ·**
+**Built for AWS Hackathon 2026 ·** **Live demo: https://main.d1jh4x61zohsg9.amplifyapp.com/**
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Python_3.12-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
@@ -14,7 +14,7 @@ CoolRoof is a full-stack urban-heat intelligence platform that ranks city wards 
 
 ## 📋 Table of Contents
 
-- [Delhi MCD Data Layer](#-delhi-mcd-data-layer-deepanshu-branch)
+- [Delhi MCD Data Layer](#-delhi-mcd-data-layer)
 - [Repository Layout](#-repository-layout)
 - [Quick Start](#-quick-start)
 - [Environment Configuration](#-environment-configuration)
@@ -75,8 +75,7 @@ CoolRoof/
 
 ```powershell
 git clone https://github.com/Vaatsal-source/HeatLens.git
-cd CoolRoof
-git checkout Deepanshu
+cd HeatLens
 ```
 
 ### 2. Backend setup
@@ -239,7 +238,7 @@ python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
 npm install
 npx cdk bootstrap
-npx cdk deploy --all -c bedrock_model_id=<id> -c ops_email=you@example.com
+npx cdk deploy --all
 ```
 
 Then load data:
@@ -247,13 +246,14 @@ Then load data:
 ```powershell
 cd ..\backend
 $env:RUNTIME="aws"
-$env:S3_BUCKET="<bucket from stack output>"
 uv run python -m scripts.run_pipeline --city mini_city
 ```
 
-Set `BACKEND_URL=<ApiUrl>` for the frontend (`next.config.mjs` proxies `/api/*` to it).
+Point the frontend at the deployed API with the `BACKEND_URL` environment variable (`next.config.mjs` proxies `/api/*` to it). Set `S3_BUCKET` to the data bucket before loading data. Optional CDK settings (Bedrock model, alert email, budget) are listed in `infra/README.md`.
 
-> ⚠️ **Never deployed yet.** The `S3BlobStore`, `DynamoDocStore`, `SNSNotifier`, `SecretsManagerSecrets`, `PollyTTS` and Cognito paths have never run against real AWS. Fix what the first real deploy exposes.
+> ✅ **Deployed.** Live at https://main.d1jh4x61zohsg9.amplifyapp.com/ (frontend on AWS Amplify, backend from the CDK stacks in `infra/`).
+>
+> Locally (`RUNTIME=local`) the same code uses SQLite, local files and a file outbox, so everything still runs offline.
 
 
 ## 🏛 Architecture
@@ -315,7 +315,7 @@ flowchart TB
         end
     end
 
-    subgraph AWS["AWS Adapter — Written, Not Deployed"]
+    subgraph AWS["AWS Adapter — Deployed"]
         ADAPTER["AWS Adapter"]
         S3["Amazon S3"]
         DDB["DynamoDB"]
@@ -369,19 +369,18 @@ FastAPI runs on port `8000` and contains three main components:
 2. **Services:** Provides recommendations and advisories.
 3. **Agent:** Uses a deterministic engine with a Strands/mock integration.
 
-The current implementation uses local adapters backed by files and dictionaries.
+With `RUNTIME=local` the adapters are backed by SQLite and local files. With `RUNTIME=aws` the same code uses S3, DynamoDB, SNS, Secrets Manager and Polly.
 
 ## AWS Integration
 
-The AWS adapter has been written but is not deployed. The planned infrastructure includes:
+The infrastructure is defined in `infra/` with AWS CDK (Python):
 
-- Amazon S3 for object storage.
-- DynamoDB for structured data.
-- Amazon SNS for notifications.
-- AWS Lambda for serverless execution.
-- AWS CDK for infrastructure provisioning.
+- Amazon S3 and DynamoDB for data.
+- AWS Lambda (container image) behind API Gateway for the FastAPI app, plus a Lambda for scheduled jobs.
+- Amazon EventBridge schedules, Amazon SNS alerts, AWS Secrets Manager and Amazon Cognito.
+- CloudWatch alarms and an AWS Budget.
 
-Dotted arrows indicate planned integration, not active production connections.
+In the diagram, dotted arrows show provisioning by CDK.
 
 
 **Key design decisions:**

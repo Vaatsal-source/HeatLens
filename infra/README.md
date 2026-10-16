@@ -52,7 +52,7 @@ Context keys (all optional): `city` (default `mini_city`), `bedrock_model_id`, `
   ```
   The script reads the secret `coolroof/app`, so it needs the same AWS credentials.
 * **Smoke test:** `GET <ApiUrl>/health`, `/wards`, then `/agent/chat`, an alert send, `/tts`, `/documents/application-pdf`.
-  None of these AWS paths has run against a real account yet.
+  The stacks have been deployed; use this to confirm each path works in your account.
 
 ## Tests
 
