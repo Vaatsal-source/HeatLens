@@ -4,7 +4,7 @@
 
 CoolRoof is a full-stack urban-heat intelligence platform that ranks city wards and rooftops for cool-roof action using Landsat surface temperature data, and gives households a locality-aware rooftop-solar check (PM Surya Ghar subsidy, payback range, Hindi/English assistant, PDF summary).
 
-**Built for AWS Hackathon 2026 · Team: Deepanshu Nain, Vinay Kumar Goyal, Vaatsalya Srivastava , Sumit Singh**
+**Built for AWS Hackathon 2026 ·**
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Python_3.12-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
@@ -74,7 +74,7 @@ CoolRoof/
 ### 1. Clone the repository
 
 ```powershell
-git clone https://github.com/Vinay-Kumar-Goyal-2008/CoolRoof.git
+git clone https://github.com/Vaatsal-source/HeatLens.git
 cd CoolRoof
 git checkout Deepanshu
 ```
